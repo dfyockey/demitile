@@ -1,0 +1,231 @@
+#!/bin/bash
+
+# MIT License
+# 
+# Copyright (c) 2021 David Yockey
+# 
+# Permission is hereby granted, free of charge, to any person obtaining a copy
+# of this software and associated documentation files (the "Software"), to deal
+# in the Software without restriction, including without limitation the rights
+# to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+# copies of the Software, and to permit persons to whom the Software is
+# furnished to do so, subject to the following conditions:
+# 
+# The above copyright notice and this permission notice shall be included in all
+# copies or substantial portions of the Software.
+# 
+# THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+# IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+# FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+# AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+# LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+# OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+# SOFTWARE.
+
+# This script is dedicated to everyone's favorite assistants, Trial and Error,
+# without whom its development would not have been possible. :)
+
+# Load presistant variables
+varfile=$HOME/.semitile_vars
+SEMITILE_WIN=0
+SEMITILE_CTR=0
+if [ -e $varfile ]
+	then
+		exec 3<$varfile
+		read -u3 SEMITILE_WIN SEMITILE_CTR
+		exec 3<&-
+fi
+
+# Window Gravity Constant (see https://specifications.freedesktop.org/wm-spec/wm-spec-1.3.html)
+NorthWestGravity=1
+
+# Get the upper-left position, height, and width of the current
+# desktop's workarea (i.e. desktop geometry excluding area of panels)
+waGeometry=$(wmctrl -d | sed -n 's/^.*\*.*WA: \(.*\)  Workspace.*$/\1/p')
+
+# Bash string manipulations to seperate out the pertinent values
+# (ref - https://tldp.org/LDP/abs/html/string-manipulation.html)
+waX=$(expr match "$waGeometry" '\(^[0-9][0-9]*\)')
+waY=$(expr match "$waGeometry" '.*,\([0-9][0-9]*\)')
+waW=$(expr match "$waGeometry" '.* \([0-9][0-9]*\)')
+waH=$(expr match "$waGeometry" '.*x\([0-9][0-9]*\)')
+
+# Get active window and make sure it's `Normal` before proceding
+ActiveWindow=$(xdotool getactivewindow)
+# Note: While xdotool and wmctrl can both get the active window when needed
+#       when given a particular option, the use of an ActiveWindow variable
+#       hereafter prevents acting on more than one window in the off chance
+#       that the active window changes while the script is executing.
+
+# Exclude windows that are not "Normal" according to xwininfo, such as:
+# - desktop window
+# - panels
+# - conky windows with `own_window_type` set to other than `normal`
+# - skinned VLC windows
+WinType=$(xwininfo -wm -id $(xdotool getactivewindow) | sed -n '/Window type/{n
+s/^.*\(Normal\)$/\1/p
+}')
+if [ "$WinType" != "Normal" ]
+	then
+		exit 1
+fi
+
+# Window Position Values based on Workarea Geometry
+
+### X Values for Screen Position of Left Side of Windows
+	MinX=$waX
+	MidX=$((waW/2))
+	
+	# Window width modification to compensate for rounding error in MidX
+	ModX=0
+	if [ $((waW%2)) -eq 1 ]
+		then
+			ModX=1
+	fi
+
+### Y Values for Screen Position of Top Side of Windows
+	MinY=$waY
+	MidY=$((waH/2))
+	
+	# Window height modification to compensate for rounding error in MidY
+	ModY=0
+	if [ $((waH%2)) -eq 1 ]
+		then
+			ModY=1
+	fi
+
+# Get left, right, top, and bottom border sizes of the active window
+# - Used to in calculating its height and width
+#
+extents=$(xprop -id $ActiveWindow | sed -n 's/^_NET_FRAME_EXTENTS(CARDINAL) = \(.*\)$/\1/p')
+if [ "$extents" != "" ]
+	then
+		nlb=$(echo $extents | cut -d ',' -f1) # width of left decoration border
+		nrb=$(echo $extents | cut -d ',' -f2) # width of right decoration border
+		ntb=$(echo $extents | cut -d ',' -f3) # height of top decoration border
+		nbb=$(echo $extents | cut -d ',' -f4) # height of bottom decoration border
+	else
+		nlb=0
+		nrb=0
+		ntb=0
+		nbb=0
+fi
+
+extents=$(xprop -id $ActiveWindow | sed -n 's/^_GTK_FRAME_EXTENTS(CARDINAL) = \(.*\)$/\1/p')
+if [ "$extents" != "" ]
+	then
+		glb=$(echo $extents | cut -d ',' -f1) # width of left border
+		grb=$(echo $extents | cut -d ',' -f2) # width of right border
+		gtb=$(echo $extents | cut -d ',' -f3) # height of top border
+		gbb=$(echo $extents | cut -d ',' -f4) # height of bottom border
+	else
+		glb=0
+		grb=0
+		gtb=0
+		gbb=0
+fi
+
+# Test info...
+#echo "$waX, $waY, $waW, $waH"
+#echo "$nlb, $nrb, $ntb, $nbb"
+#echo "$glb, $grb, $gtb, $gbb, $ghalftb"
+
+# Partition-by-thirds for $waW x $waH Display
+thirdW=$((waW/3))
+thirdH=$((waH/3))
+
+# Window Size Values based on Workarea Geometry
+### X Values for Possible Window Widths
+	HalfX=$((MidX-nlb-nrb+glb+grb+ModX))
+	MaxX=$((waW-nlb-nrb+glb+grb))
+### Y Values for Possible Window Heights
+	HalfY=$((MidY-ntb-nbb+gtb+gbb+ModY))
+	MaxY=$((waH-ntb-nbb+gtb+gbb))
+
+# Get current mouse pointer screen position
+eval $(xdotool getmouselocation --shell)
+mouseX=$X
+mouseY=$Y
+
+# Indicies specifying the screen partition containing the mouse pointer
+Xpart=$((mouseX/thirdW))
+Ypart=$((mouseY/thirdH))
+
+# No need to declare these.
+# They're just here for completeness in summarizing the important variables
+posX=0
+posY=0
+sizeX=0
+sizeY=0
+
+# Determine window horiz pos & width based on partition containing the mouse pointer
+if [ $Xpart -eq 0 ]
+	then
+		posX=$((MinX-glb))
+		sizeX=$HalfX
+	elif [ $Xpart -eq 1 ]
+		then
+			posX=$((MinX-glb))
+			sizeX=$MaxX
+	else
+		posX=$((MidX + waX - glb))
+		sizeX=$HalfX
+fi
+
+# Determine window vert pos & height based on partition containing the mouse pointer
+if [ $Ypart -eq 0 ]
+	then
+		posY=$((MinY-gtb))
+		sizeY=$HalfY
+	elif [ $Ypart -eq 1 ]
+		then
+			posY=$((MinY-gtb))
+			sizeY=$MaxY
+	else
+		posY=$((MidY + waY - gtb))
+		sizeY=$HalfY
+fi
+
+# Unmaximize if maximized
+wmctrl -i -r $ActiveWindow -b remove,maximized_vert,maximized_horz
+
+# Finally, position and size the active window as appropriate
+if [ $Xpart -eq 1 -a $Ypart -eq 1 ]
+	then
+		if [ $SEMITILE_WIN != $ActiveWindow -o $SEMITILE_CTR != "1" ]
+			then
+				echo "position only..."
+				# Center active window in workarea without changing its size
+				# ($WIDTH and $HEIGHT are generated by the `eval`)
+				eval $(xdotool getwindowgeometry --shell $ActiveWindow)
+				posX=$(( MidX - nlb - ($WIDTH / 2) + MinX ))
+				posY=$(( MidY - ntb - ($HEIGHT / 2) + MinY ))
+				wmctrl -i -r $ActiveWindow -e $NorthWestGravity,$posX,$posY,-1,-1
+				
+				# Save presistant variables
+				SEMITILE_WIN=$ActiveWindow
+				SEMITILE_CTR=1
+				echo -e "$SEMITILE_WIN $SEMITILE_CTR" > $varfile
+			else
+				sizeX=$HalfX
+				sizeY=$MaxY
+				posX=$(( MidX - nlb - ($sizeX / 2) + MinX ))
+				posY=$(( MidY - ntb - ($sizeY / 2) + MinY ))
+				# Two calls... See comment below...
+				wmctrl -i -r $ActiveWindow -e $NorthWestGravity,$posX,$posY,$sizeX,$sizeY
+				sleep 0.25
+				wmctrl -i -r $ActiveWindow -e $NorthWestGravity,-1,-1,$sizeX,$sizeY
+		fi
+	else
+		# Two calls to set size are needed to work around an apparent bug in
+		# sizing of some windows (at least gnome terminal windows).
+		# The same bug was encountered when using xdotool instead of wmctrl.
+		wmctrl -i -r $ActiveWindow -e $NorthWestGravity,$posX,$posY,$sizeX,$sizeY
+		sleep 0.25
+		wmctrl -i -r $ActiveWindow -e $NorthWestGravity,-1,-1,$sizeX,$sizeY
+		
+		# Save presistant variables
+		SEMITILE_WIN=$ActiveWindow
+		SEMITILE_CTR=0
+		echo -e "$SEMITILE_WIN $SEMITILE_CTR" > $varfile
+fi
