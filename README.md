@@ -30,7 +30,7 @@ Semitile defines screen areas to control tiling by dividing the
 screen into a 3x3 grid, as follows, where tiling areas are portions of
 the screen working area (i.e. the area excluding never-hidden panels):
 
-------------|------------|------------
+-------- | -------- | --------
 Tile to Upper-Left Quarter | Tile to Upper Half | Tile to Upper-Right Quarter
 Tile to Left Half | Tile to Center sans resize | Tile to Right Half
 Tile to Lower-Left Quarter | Tile to Lower Half | Tile to Lower-Right Quarter
