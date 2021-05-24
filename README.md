@@ -27,18 +27,24 @@ necessary or desired.
 ### Basic Tiling
 
 Semitile defines screen areas to control tiling by dividing the
-screen into a 3x3 grid, as follows, where tiling areas are portions of
+screen into a 3x3 grid of equal-size areas, as follows,
+where tiling areas are portions of
 the screen working area (i.e. the area excluding never-hidden panels):
 
--------- | -------- | --------
-Tile to Upper-Left Quarter | Tile to Upper Half | Tile to Upper-Right Quarter
-Tile to Left Half | Tile to Center sans resize | Tile to Right Half
-Tile to Lower-Left Quarter | Tile to Lower Half | Tile to Lower-Right Quarter
+    -----------------------------------------------------------------------------------------------
+    |  Tile to Upper-Left Quarter  |      Tile to Upper Half      |  Tile to Upper-Right Quarter  |
+    -----------------------------------------------------------------------------------------------
+    |      Tile to Left Half       |      Position at Center      |      Tile to Right Half       |
+    -----------------------------------------------------------------------------------------------
+    |  Tile to Lower-Left Quarter  |      Tile to Lower Half      |  Tile to Lower-Right Quarter  |
+    -----------------------------------------------------------------------------------------------
 
 To tile the active window to a particular location, point the mouse at
 the corresponding area of the screen indicated in the grid above and
 press the tiling key. Where the active window is a
 normal window, it should immediately tile to the indicated size and position.
+Where the mouse pointer in the center area, the active window is
+centered in the working area without resizing.
 
 For practical reasons, some windows are excluded from tiling. Such windows include the
 desktop window and desktop panels, as well windows not "Normal" according to xwininfo
@@ -52,7 +58,7 @@ Attempts to tile such windows will have no effect.
 A window may also be tiled to screen center at half working area width and
 full working area height to facilitate extended reading.
 To tile a window in this manner,
-position the mouse in the "Tile to Center..." area indicated in Basic Tiling
+position the mouse in the "Position at Center" area indicated in Basic Tiling
 above and then press the tiling key twice in succession.
 The first key press centers the window without resizing,
 while the second resizes it to the dimensions indicated.
