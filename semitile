@@ -148,8 +148,9 @@ mouseX=$X
 mouseY=$Y
 
 # Indicies specifying the screen partition containing the mouse pointer
-Xpart=$((mouseX/thirdW))
-Ypart=$((mouseY/thirdH))
+
+Xpart=$(((mouseX-MinX)/thirdW))
+Ypart=$(((mouseY-MinY)/thirdH))
 
 # No need to declare these.
 # They're just here for completeness in summarizing the important variables
