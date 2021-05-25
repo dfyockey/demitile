@@ -1,10 +1,10 @@
 # semitile
-Point &amp; Key Tiling for Xfce
+Point &amp; Press Tiling for Xfce
 
 ## Overview
 
 Semitile enables tiling control by pointing the mouse at a particular
-screen area and pressing a single tiling key or key combination
+screen area and pressing a single keyboard shortcut
 to tile the active window based on the mouse pointer position.
 
 ## Setup
@@ -17,19 +17,18 @@ _**Notes**_
 
 * If the directory containing `semitile` isn't on your PATH, you'll need
 to provide the keyboard shortcut with the full path to `semitile`.
-* A good choice for a tiling key would be a key that you rarely use. Such
-keys found on ordinary keyboards might include Menu, Scroll Lock, Pause,
-or one of the Windows or Super keys. A key combination may be used if
-necessary or desired.
+* A good choice for a tiling key would be a key that you don't use.
+Depending on the user, such keys found on ordinary keyboards might include
+Menu, Scroll Lock, Pause, or one of the Windows or Super keys.
+* Users with a 4+ button mouse should be able to use an extra mouse button
+as the tiling key.
 
 ## Description & Use
 
 ### Basic Tiling
 
-Semitile defines screen areas to control tiling by dividing the
-screen into a 3x3 grid of equal-size areas, as follows,
-where tiling areas are portions of
-the screen working area (i.e. the area excluding never-hidden panels):
+Semitile divides the screen working area (i.e. the area excluding never-hidden panels)
+into a grid of equal-size areas as shown in the following table.
 
     -----------------------------------------------------------------------------------------------
     |  Tile to Upper-Left Quarter  |      Tile to Upper Half      |  Tile to Upper-Right Quarter  |
@@ -39,16 +38,18 @@ the screen working area (i.e. the area excluding never-hidden panels):
     |  Tile to Lower-Left Quarter  |      Tile to Lower Half      |  Tile to Lower-Right Quarter  |
     -----------------------------------------------------------------------------------------------
 
-To tile the active window to a particular location, point the mouse at
-the corresponding area of the screen indicated in the grid above and
-press the tiling key. Where the active window is a
-normal window, it should immediately tile to the indicated size and position.
-Where the mouse pointer in the center area, the active window is
-centered in the working area without resizing.
+To tile the active window to a particular location, point the mouse
+to a screen area press the tiling key.
+The window should immediately tile to the indicated size and position
+indicated in the table. When the mouse pointer is located in the center
+area, the window is centered in the working area but not resized.
 
-For practical reasons, some windows are excluded from tiling. Such windows include the
-desktop window and desktop panels, as well windows not "Normal" according to xwininfo
-(e.g. skinned VLC windows, Conky windows with `own_window_type` other than normal, etc.).
+_**Note**_
+
+* For practical reasons, windows that are not "Normal" according to xwininfo
+are excluded from tiling. These include the desktop window, desktop panels,
+and other unusual windows (e.g. skinned
+VLC windows, Conky windows with `own_window_type` other than normal, etc.).
 Attempts to tile such windows will have no effect.
 
 ### Additional Tiling
