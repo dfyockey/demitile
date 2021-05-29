@@ -236,7 +236,14 @@ if [ $Xpart -eq 0 ]
 	elif [ $Xpart -eq 1 ]
 		then
 			posX=$((MinX-glb))
-			sizeX=$MaxX
+			eval $(xdotool getwindowgeometry --shell $ActiveWindow)
+			if [ $SEMITILE_WIN != $ActiveWindow -o $WIDTH != $MaxX ]
+				then
+					sizeX=$MaxX
+				else
+					sizeX=$HalfX
+					posX=$((posX + (MidX/2)))
+			fi
 			SEMITILE_MODE=$NUL
 	else
 		posX=$((MidX + waX - glb))
