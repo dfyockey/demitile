@@ -9,7 +9,7 @@ Tile sizing is controlled by repeated tiling key presses.
 
 ### Basic Tiling
 
-The screen working area (i.e. the area excluding never-hidden panels) is
+The screen workarea (i.e. the area excluding never-hidden panels) is
 viewed by Semitile as a grid of equal-size areas, as shown in the
 following table.
 
@@ -26,7 +26,7 @@ the mouse is pointed to the corresponding area, afterwhich the tiling key
 is pressed.
 The window should immediately tile to the size and position
 indicated in the table. When the mouse pointer is located in the center
-area, the window is centered in the working area but not resized.
+area, the window is centered in the workarea but not resized.
 
 For practical reasons, windows that are not "Normal" according to the
 `xwininfo` utility
@@ -53,8 +53,8 @@ After a window has been positioned at center as indicated in Basic Tiling,
 subsequent presses of the tiling key set the window height to its maximum
 and toggle the window width between the following sizes:
 
-* Half-screen width (intended to facilitate reading of lengthy documents), and
-* Three-quarter-screen width.
+* Half-workarea (intended to facilitate reading of lengthy documents), and
+* Three-quarter-workarea.
 
 #### Left/Right Tiles
 
@@ -62,9 +62,9 @@ After a window has been tiled to the left or right as indicated in
 Basic Tiling, subsequent presses of the tiling key toggle the tiled
 window width between the following sizes:
 
-* Quarter-screen width,
-* Three-quarter-screen width, and
-* Half-screen width.
+* Quarter-workarea,
+* Three-quarter-workarea, and
+* Half-workarea.
 
 #### Upper/Lower Tiles
 
@@ -72,14 +72,20 @@ After a window is tiled to the upper or lower half as indicated in
 Basic Tiling, subsequent presses of the tiling key toggle the tiled
 window width between the following sizes:
 
-* Half-screen width (centered horizontally), and
-* Maximum width.
+* Three-quarter-workarea (centered horizontally),
+* Half-workarea (centered horizontally), and
+* Full-workarea (i.e. maximum width).
 
 ## Setup
 
 1. Place the `semitile` file in the directory of your choice.
 2. Select a key or key combination to use as the tiling key.
 3. Set a keyboard shortcut for the selected key(s) to launch `semitile`.
+4. (Optional but Highly Recommended) If checked, uncheck
+`Automatically tile windows when moving toward the screen edge` on the
+Accessibility Tab in Window Manager Tweaks.
+5. (Optional) If checked, uncheck `Show shadows under regular windows`
+on the Compositor Tab in Window Manager Tweaks.
 
 _**Notes**_
 
@@ -90,3 +96,9 @@ Windows or Super keys. However, any available key or key combination
 can be used as the tiling key.
 * Users with a 4+ button mouse may be able to use an extra mouse button
 as the tiling key.
+* Setup step 4 is highly recommended to avoid confusion due to differences
+between drag-tiled and semitiled window behavior after tiling.
+If moved after tiling, drag-tiled windows return to their pre-tiled size
+while semitiled windows retain their tiled size. Also, a drag-tiled window
+requires a spurious semitile window operation before it will toggle in width.
+* Setup step 5 provides more sharply defined tiled window edges.

@@ -25,15 +25,17 @@
 # This script is dedicated to everyone's favorite assistants, Trial and Error,
 # without whom its development would not have been possible. :)
 
+# General Purpose Null Value
+NUL=0
 
 # Window Gravity Constant (see https://specifications.freedesktop.org/wm-spec/wm-spec-1.3.html#idm45850117550944)
 NORTH_WEST_GRAVITY=1
 
 # SEMITILE_XPOS Constants (not X or Y indices for refering to a partition containing the mouse pointer)
-NUL=0
 LFT=1
-CTR=2
+CTR=2	# Centered in Work Area
 RGT=3
+CTB=4	# Centered at Top or Bottom
 
 # Get current mouse pointer screen position
 # -- Needs to be early in the script to get an accurate position of the mouse as intended by the user
@@ -102,6 +104,10 @@ ActiveWindow=$(xdotool getactivewindow)
 #       when given a particular option, the use of an ActiveWindow variable
 #       hereafter prevents acting on more than one window in the off chance
 #       that the active window changes while the script is executing.
+
+# Unmaximize if maximized
+# -- Must unmaximize BEFORE getting any window geometry to insure that the window has borders!
+wmctrl -i -r $ActiveWindow -b remove,maximized_vert,maximized_horz
 
 # Exclude windows that are not "Normal" according to xwininfo, such as:
 # - desktop window
@@ -237,14 +243,30 @@ if [ $Xpart -eq 0 ]
 		then
 			posX=$((MinX-glb))
 			eval $(xdotool getwindowgeometry --shell $ActiveWindow)
-			if [ $SEMITILE_WIN != $ActiveWindow -o $WIDTH != $MaxX ]
+			if [ $SEMITILE_WIN != $ActiveWindow -o $SEMITILE_XPOS != $CTB -o $Ypart != $SEMITILE_YPOS ]
 				then
 					sizeX=$MaxX
+					SEMITILE_MODE=2
 				else
-					sizeX=$HalfX
-					posX=$((posX + (MidX/2)))
+					increment_SEMITILE_MODE		# function
+					case "$SEMITILE_MODE" in
+						1)
+							sizeX=$HalfX
+							posX=$((posX + (MidX/2)))
+							;;
+						2)
+							sizeX=$MaxX
+							;;
+						3)
+							posX=$((posX + (MidX/4)))
+							sizeX=$TriQtrX
+							;;
+					esac
 			fi
-			SEMITILE_MODE=$NUL
+			if [ $Ypart -ne 1 ]
+				then
+					SEMITILE_XPOS=$CTB
+			fi
 	else
 		posX=$((MidX + waX - glb))
 		if [ $Yp -ne 1 -o $SEMITILE_WIN != $ActiveWindow -o $SEMITILE_XPOS != $RGT -o $Ypart != $SEMITILE_YPOS ]
@@ -283,9 +305,6 @@ if [ $Ypart -eq 0 ]
 		posY=$((MidY + waY - gtb))
 		sizeY=$HalfY
 fi
-
-# Unmaximize if maximized
-wmctrl -i -r $ActiveWindow -b remove,maximized_vert,maximized_horz
 
 # Finally, position and size the active window as appropriate
 if [ $Xpart -eq 1 -a $Ypart -eq 1 ]
