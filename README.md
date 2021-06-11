@@ -7,11 +7,12 @@ Semitile enables active window tiling to different locations using a single
 tiling key, with tiling location being determined by mouse pointer position.
 Tile sizing is controlled by repeated tiling key presses.
 
-### Basic Tiling
+### Coarse Tiling
 
 The screen workarea (i.e. the area excluding never-hidden panels) is
 viewed by Semitile as a grid of equal-size areas, as shown in the
-following table.
+following table. These areas are used to determine large-scale tiling
+location.
 
     -----------------------------------------------------------------------------------------------
     |  Tile to Upper-Left Quarter  |      Tile to Upper Half      |  Tile to Upper-Right Quarter  |
@@ -22,7 +23,7 @@ following table.
     -----------------------------------------------------------------------------------------------
 
 To tile the active window to a particular location,
-the mouse is pointed to the corresponding area, afterwhich the tiling key
+the mouse is pointed to the corresponding area, after which the tiling key
 is pressed.
 The window should immediately tile to the size and position
 indicated in the table. When the mouse pointer is located in the center
@@ -35,70 +36,73 @@ and other unusual windows (e.g. skinned
 VLC windows, Conky windows with `own_window_type` other than normal, etc.).
 Attempts to tile such windows will have no effect.
 
-### Tile Sizing
+### Fine Tiling
 
-After a window has been tiled, its width can be toggled between a number
-of sizes by repeated presses of the tiling key. A center-positioned
-window's height is also affected.
+After a window has been coarsely centered or tiled, fine tile selection
+can be performed by repeated presses of the tiling key. In so doing, a
+tile's size can be toggled between a number of widths. Fine tiling
+a center positioned window also sets its height to maximum.
 
-Unlike with mouse double-clicking, successive key presses will be
-effective any time after the first key press until either 1) a tiling
-operation is performed on another window, or 2) the mouse pointer is
-positioned in a different screen area when the tiling key is pressed.
+Repeated presses of the tiling key toggle window width between the
+following workarea fractions:
+
+#### Centered
+
+* Half, and
+* Three-quarters (not technically a "tile" since it will overlap or be
+overlapped by any other tiles)
+
+#### Left/Right Quarter or Half Tiles
+
+* Quarter,
+* Three-quarters, and
+* Half
+
+#### Upper/Lower Half Tiles
+
+* Three-quarters (centered horizontally),
+* Half (centered horizontally), and
+* Full (i.e. maximum width)
+
+Unlike mouse double-clicking, successive key presses are
+effective any time after the first key press until either
+
+1. a tiling operation is performed on another window, or
+
+2. the mouse pointer is positioned in a different screen area when the
+tiling key is pressed.
+
 That is, there is no time limit analogous to the mouse's double-click time.
-
-#### Center Tile
-
-After a window has been positioned at center as indicated in Basic Tiling,
-subsequent presses of the tiling key set the window height to its maximum
-and toggle the window width between the following sizes:
-
-* Half-workarea (intended to facilitate reading of lengthy documents), and
-* Three-quarter-workarea.
-
-#### Left/Right Tiles
-
-After a window has been tiled to the left or right as indicated in
-Basic Tiling, subsequent presses of the tiling key toggle the tiled
-window width between the following sizes:
-
-* Quarter-workarea,
-* Three-quarter-workarea, and
-* Half-workarea.
-
-#### Upper/Lower Tiles
-
-After a window is tiled to the upper or lower half as indicated in
-Basic Tiling, subsequent presses of the tiling key toggle the tiled
-window width between the following sizes:
-
-* Three-quarter-workarea (centered horizontally),
-* Half-workarea (centered horizontally), and
-* Full-workarea (i.e. maximum width).
 
 ## Setup
 
 1. Place the `semitile` file in the directory of your choice.
+
 2. Select a key or key combination to use as the tiling key.
-3. Set a keyboard shortcut for the selected key(s) to launch `semitile`.
-4. (Optional but Highly Recommended) If checked, uncheck
+
+	* Suggestions for a tiling key include the Menu key or one of the
+Windows or Super keys. However, any available key or key combination
+can be used as the tiling key.
+
+	* Users with a 4+ button mouse may be able to use an extra mouse button
+as the tiling key.
+
+3. Set a keyboard shortcut for the selected tiling key(s) to launch `semitile`.
+
+	* If the directory containing `semitile` isn't on your PATH, the
+keyboard shortcut will need the full path to `semitile`.
+
+4. (Optional) If checked, uncheck
 `Automatically tile windows when moving toward the screen edge` on the
 Accessibility Tab in Window Manager Tweaks.
+
+	* Recommended to avoid confusion due to differences
+between drag-tiled and semitiled window behavior after tiling
+(If moved after tiling, drag-tiled windows return to their pre-tiled size
+while semitiled windows retain their tiled size. Also, a drag-tiled window
+requires a spurious semitile window operation before it will toggle in width.)
+
 5. (Optional) If checked, uncheck `Show shadows under regular windows`
 on the Compositor Tab in Window Manager Tweaks.
 
-_**Notes**_
-
-* If the directory containing `semitile` isn't on your PATH, the
-keyboard shortcut will need the full path to `semitile`.
-* Suggestions for a tiling key include the Menu key or one of the
-Windows or Super keys. However, any available key or key combination
-can be used as the tiling key.
-* Users with a 4+ button mouse may be able to use an extra mouse button
-as the tiling key.
-* Setup step 4 is highly recommended to avoid confusion due to differences
-between drag-tiled and semitiled window behavior after tiling.
-If moved after tiling, drag-tiled windows return to their pre-tiled size
-while semitiled windows retain their tiled size. Also, a drag-tiled window
-requires a spurious semitile window operation before it will toggle in width.
-* Setup step 5 provides more sharply defined tiled window edges.
+	* Provides sharper visual definition of tiled window edges.
