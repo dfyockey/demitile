@@ -48,9 +48,12 @@ following workarea fractions:
 
 #### Centered
 
-* Half, and
-* Three-quarters (not technically a "tile" since it will overlap or be
-overlapped by any other tiles)
+* Half,
+* Quarter, and
+* Three-quarters
+
+(The last two widths are useful but are not technically tiles since they
+don't align with any other tiles.)
 
 #### Left/Right Quarter or Half Tiles
 
@@ -63,6 +66,8 @@ overlapped by any other tiles)
 * Three-quarters (centered horizontally),
 * Half (centered horizontally), and
 * Full (i.e. maximum width)
+
+**_Note:_**
 
 Unlike mouse double-clicking, successive key presses are
 effective any time after the first key press until either

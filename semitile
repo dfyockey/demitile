@@ -245,8 +245,11 @@ if [ $Xpart -eq 0 ]
 			eval $(xdotool getwindowgeometry --shell $ActiveWindow)
 			if [ $SEMITILE_WIN != $ActiveWindow -o $SEMITILE_XPOS != $CTB -o $Ypart != $SEMITILE_YPOS ]
 				then
-					sizeX=$MaxX
-					SEMITILE_MODE=2
+					if [ $Ypart -ne 1 ]
+						then
+							sizeX=$MaxX
+							SEMITILE_MODE=2
+					fi
 				else
 					increment_SEMITILE_MODE		# function
 					case "$SEMITILE_MODE" in
@@ -318,15 +321,21 @@ if [ $Xpart -eq 1 -a $Ypart -eq 1 ]
 				posX=$(( MidX - nlb - ($WIDTH / 2) + MinX ))
 				posY=$(( MidY - ntb - ($HEIGHT / 2) + MinY ))
 				wmctrl -i -r $ActiveWindow -e $NORTH_WEST_GRAVITY,$posX,$posY,-1,-1
-				save_vars $CTR $NUL $NUL		# function
+				save_vars $CTR $NUL 3		# function - prime SEMITILE_MODE to increment to half width
 			else
 				# Size and center active window to facilitate reading
-				if [ $WIDTH -ne $HalfX -o $HEIGHT -ne $MaxY ]
-					then
+				increment_SEMITILE_MODE		# function
+				case "$SEMITILE_MODE" in
+					1)
 						sizeX=$HalfX
-					else
+						;;
+					2)
+						sizeX=$QtrX
+						;;
+					3)
 						sizeX=$TriQtrX
-				fi
+						;;
+				esac
 				sizeY=$MaxY
 				posX=$(( MidX - nlb - ($sizeX / 2) + MinX ))
 				posY=$(( MidY - ntb - ($sizeY / 2) + MinY ))
@@ -334,6 +343,7 @@ if [ $Xpart -eq 1 -a $Ypart -eq 1 ]
 				wmctrl -i -r $ActiveWindow -e $NORTH_WEST_GRAVITY,$posX,$posY,$sizeX,$sizeY
 				sleep 0.25
 				wmctrl -i -r $ActiveWindow -e $NORTH_WEST_GRAVITY,-1,-1,$sizeX,$sizeY
+				save_vars $CTR $NUL $SEMITILE_MODE
 		fi
 	else
 		# Two calls to set size are needed to work around an apparent bug in
