@@ -31,7 +31,7 @@ NUL=0
 # Window Gravity Constant (see https://specifications.freedesktop.org/wm-spec/wm-spec-1.3.html#idm45850117550944)
 NORTH_WEST_GRAVITY=1
 
-# SEMITILE_XPOS Constants (not X or Y indices for refering to a partition containing the mouse pointer)
+# DEMITILE_XPOS Constants (not X or Y indices for refering to a partition containing the mouse pointer)
 LFT=1
 CTR=2	# Centered in Work Area
 RGT=3
@@ -44,26 +44,26 @@ mouseX=$X
 mouseY=$Y
 
 # Load presistant variables
-varfile=$HOME/.semitile_vars
-SEMITILE_WIN=0
-SEMITILE_XPOS=$NUL	# 1=Centered, 2=Left, 3=Right
-SEMITILE_YPOS=$NUL
-SEMITILE_MODE=$NUL	# 1=Half, 2=One-Fourth, 3=Three-Fourths
+varfile=$HOME/.demitile_vars
+DEMITILE_WIN=0
+DEMITILE_XPOS=$NUL	# 1=Centered, 2=Left, 3=Right
+DEMITILE_YPOS=$NUL
+DEMITILE_MODE=$NUL	# 1=Half, 2=One-Fourth, 3=Three-Fourths
 if [ -e $varfile ]
 	then
 		exec 3<$varfile
-		read -u3 SEMITILE_WIN SEMITILE_XPOS SEMITILE_YPOS SEMITILE_MODE
+		read -u3 DEMITILE_WIN DEMITILE_XPOS DEMITILE_YPOS DEMITILE_MODE
 		exec 3<&-
 fi
 
 # Save presistant variables
 function save_vars()
 {
-	SEMITILE_WIN=$ActiveWindow
-	SEMITILE_XPOS=$1
-	SEMITILE_YPOS=$2
-	SEMITILE_MODE=$3
-	echo -e "$SEMITILE_WIN $SEMITILE_XPOS $SEMITILE_YPOS $SEMITILE_MODE" > $varfile
+	DEMITILE_WIN=$ActiveWindow
+	DEMITILE_XPOS=$1
+	DEMITILE_YPOS=$2
+	DEMITILE_MODE=$3
+	echo -e "$DEMITILE_WIN $DEMITILE_XPOS $DEMITILE_YPOS $DEMITILE_MODE" > $varfile
 }
 
 function sizeX_HalfX()
@@ -71,19 +71,19 @@ function sizeX_HalfX()
 	sizeX=$HalfX
 	if [ $Yp -eq 1 ]
 		then 
-			SEMITILE_MODE="1"
+			DEMITILE_MODE="1"
 		else
 			# Prime for sizeX=$HalfX upon switch to $Ypart -eq 1 tile
-			SEMITILE_MODE="3"
+			DEMITILE_MODE="3"
 	fi
 }
 
-function increment_SEMITILE_MODE()
+function increment_DEMITILE_MODE()
 {
-	SEMITILE_MODE=$((SEMITILE_MODE + 1))
-	if [ $SEMITILE_MODE -eq "4" ]
+	DEMITILE_MODE=$((DEMITILE_MODE + 1))
+	if [ $DEMITILE_MODE -eq "4" ]
 		then
-			SEMITILE_MODE="1"
+			DEMITILE_MODE="1"
 	fi
 }
 
@@ -221,12 +221,12 @@ Yp=1
 if [ $Xpart -eq 0 ]
 	then
 		posX=$((MinX-glb))
-		if [ $Yp -ne 1 -o $SEMITILE_WIN != $ActiveWindow -o $SEMITILE_XPOS != $LFT -o $Ypart != $SEMITILE_YPOS ]
+		if [ $Yp -ne 1 -o $DEMITILE_WIN != $ActiveWindow -o $DEMITILE_XPOS != $LFT -o $Ypart != $DEMITILE_YPOS ]
 			then
 				sizeX_HalfX					# function
 			else
-				increment_SEMITILE_MODE		# function
-				case "$SEMITILE_MODE" in
+				increment_DEMITILE_MODE		# function
+				case "$DEMITILE_MODE" in
 					1)
 						sizeX=$HalfX
 						;;
@@ -238,21 +238,25 @@ if [ $Xpart -eq 0 ]
 						;;
 				esac
 		fi
-		SEMITILE_XPOS=$LFT
+		DEMITILE_XPOS=$LFT
 	elif [ $Xpart -eq 1 ]
 		then
 			posX=$((MinX-glb))
 			eval $(xdotool getwindowgeometry --shell $ActiveWindow)
-			if [ $SEMITILE_WIN != $ActiveWindow -o $SEMITILE_XPOS != $CTB -o $Ypart != $SEMITILE_YPOS ]
+			if [ $DEMITILE_WIN != $ActiveWindow -o $DEMITILE_XPOS != $CTB -o $Ypart != $DEMITILE_YPOS ]
 				then
-					if [ $Ypart -ne 1 ]
-						then
-							sizeX=$MaxX
-							SEMITILE_MODE=2
-					fi
+					sizeX=$MaxX
+					DEMITILE_MODE=2
+
+#					if [ $Ypart -ne 1 ]
+#						then
+#							sizeX=$MaxX
+#							DEMITILE_MODE=2
+#					fi
+
 				else
-					increment_SEMITILE_MODE		# function
-					case "$SEMITILE_MODE" in
+					increment_DEMITILE_MODE		# function
+					case "$DEMITILE_MODE" in
 						1)
 							sizeX=$HalfX
 							posX=$((posX + (MidX/2)))
@@ -268,16 +272,16 @@ if [ $Xpart -eq 0 ]
 			fi
 			if [ $Ypart -ne 1 ]
 				then
-					SEMITILE_XPOS=$CTB
+					DEMITILE_XPOS=$CTB
 			fi
 	else
 		posX=$((MidX + waX - glb))
-		if [ $Yp -ne 1 -o $SEMITILE_WIN != $ActiveWindow -o $SEMITILE_XPOS != $RGT -o $Ypart != $SEMITILE_YPOS ]
+		if [ $Yp -ne 1 -o $DEMITILE_WIN != $ActiveWindow -o $DEMITILE_XPOS != $RGT -o $Ypart != $DEMITILE_YPOS ]
 			then
 				sizeX_HalfX					# function
 			else
-				increment_SEMITILE_MODE		# function
-				case "$SEMITILE_MODE" in
+				increment_DEMITILE_MODE		# function
+				case "$DEMITILE_MODE" in
 					1)
 						sizeX=$HalfX
 						;;
@@ -291,9 +295,9 @@ if [ $Xpart -eq 0 ]
 						;;
 				esac
 		fi
-		SEMITILE_XPOS=$RGT
+		DEMITILE_XPOS=$RGT
 fi
-SEMITILE_YPOS=$Ypart
+DEMITILE_YPOS=$Ypart
 
 # Determine window vert pos & height based on partition containing the mouse pointer
 if [ $Ypart -eq 0 ]
@@ -312,10 +316,10 @@ fi
 # Finally, position and size the active window as appropriate
 if [ $Xpart -eq 1 -a $Ypart -eq 1 ]
 	then
-		eval $(xdotool getwindowgeometry --shell $ActiveWindow)
+###		eval $(xdotool getwindowgeometry --shell $ActiveWindow)
 		# Override previous window horiz pos & width and window vert pos & height values
-		if [ $SEMITILE_WIN != $ActiveWindow -o $SEMITILE_XPOS != $CTR ]
-			then
+###		if [ $DEMITILE_WIN != $ActiveWindow -o $DEMITILE_XPOS != $CTR ]
+###			then
 				# Test Info...
 				#echo "MidX = $MidX : nlb = $nlb : WIDTH = $WIDTH : MinX = $MinX"
 				#echo "MidY = $MidY : ntb = $ntb : HEIGHT = $HEIGHT : MinY = $MinY"
@@ -324,30 +328,42 @@ if [ $Xpart -eq 1 -a $Ypart -eq 1 ]
 				# ($WIDTH and $HEIGHT are generated by the `eval` above)
 				#
 				# Include modulos in posX and posY calcs to compensate from uneven width windows
-				posX=$(( MidX - nlb - (WIDTH / 2 + WIDTH % 2) + MinX ))
+###				posX=$(( MidX - nlb - (WIDTH / 2 + WIDTH % 2) + MinX ))
 				#
 				# The value (ntb - nbb) is the difference in height between the top and bottom border
 				# that needs to be divided in two so half will be applied above the center and half below.
 				# Addition of nbb after the division adds back the portion of the top border equal to that
 				# of the bottom that was not included in the division.
-				posY=$(( MidY - ( (ntb - nbb) / 2 + nbb ) - (HEIGHT / 2 + HEIGHT % 2) + MinY ))
+###				posY=$(( MidY - ( (ntb - nbb) / 2 + nbb ) - (HEIGHT / 2 + HEIGHT % 2) + MinY ))
 				#
-				wmctrl -i -r $ActiveWindow -e $NORTH_WEST_GRAVITY,$posX,$posY,-1,-1
-				save_vars $CTR $NUL 3		# function - prime SEMITILE_MODE to increment to half width
-			else
+###				wmctrl -i -r $ActiveWindow -e $NORTH_WEST_GRAVITY,$posX,$posY,-1,-1
+###				save_vars $CTR $NUL $NUL		# function
+
+#				save_vars $CTR $NUL 3		# function - prime DEMITILE_MODE to increment to half width
+###			else
 				# Size and center active window to facilitate reading
-				increment_SEMITILE_MODE		# function
-				case "$SEMITILE_MODE" in
-					1)
-						sizeX=$HalfX
-						;;
-					2)
-						sizeX=$QtrX
-						;;
-					3)
-						sizeX=$TriQtrX
-						;;
-				esac
+				sizeX=$HalfX
+
+#				if [ $WIDTH -ne $HalfX -o $HEIGHT -ne $MaxY ]
+#					then
+#						sizeX=$HalfX
+#					else
+#						sizeX=$TriQtrX
+#				fi
+
+#				increment_DEMITILE_MODE		# function
+#				case "$DEMITILE_MODE" in
+#					1)
+#						sizeX=$HalfX
+#						;;
+#					2)
+#						sizeX=$QtrX
+#						;;
+#					3)
+#						sizeX=$TriQtrX
+#						;;
+#				esac
+
 				sizeY=$MaxY
 				posX=$(( MidX - nlb - ($sizeX / 2) + MinX ))
 				posY=$(( MidY - ntb - ($sizeY / 2) + MinY ))
@@ -355,8 +371,8 @@ if [ $Xpart -eq 1 -a $Ypart -eq 1 ]
 				wmctrl -i -r $ActiveWindow -e $NORTH_WEST_GRAVITY,$posX,$posY,$sizeX,$sizeY
 				sleep 0.25
 				wmctrl -i -r $ActiveWindow -e $NORTH_WEST_GRAVITY,-1,-1,$sizeX,$sizeY
-				save_vars $CTR $NUL $SEMITILE_MODE
-		fi
+				save_vars $CTR $NUL $DEMITILE_MODE
+###		fi
 	else
 		# Two calls to set size are needed to work around an apparent bug in
 		# sizing of some windows (at least gnome terminal windows).
@@ -364,5 +380,5 @@ if [ $Xpart -eq 1 -a $Ypart -eq 1 ]
 		wmctrl -i -r $ActiveWindow -e $NORTH_WEST_GRAVITY,$posX,$posY,$sizeX,$sizeY
 		sleep 0.25
 		wmctrl -i -r $ActiveWindow -e $NORTH_WEST_GRAVITY,-1,-1,$sizeX,$sizeY
-		save_vars $SEMITILE_XPOS $SEMITILE_YPOS $SEMITILE_MODE		# function
+		save_vars $DEMITILE_XPOS $DEMITILE_YPOS $DEMITILE_MODE		# function
 fi
