@@ -48,7 +48,7 @@ varfile=$HOME/.demitile_vars
 DEMITILE_WIN=0
 DEMITILE_XPOS=$NUL	# 1=Centered, 2=Left, 3=Right
 DEMITILE_YPOS=$NUL
-DEMITILE_MODE=$NUL	# 1=Half, 2=One-Fourth, 3=Three-Fourths
+DEMITILE_MODE=$NUL	# 1=Half, 2=One-Fourth, 3=Three-Fourths, 4=Full
 if [ -e $varfile ]
 	then
 		exec 3<$varfile
@@ -243,10 +243,10 @@ if [ $Xpart -eq 0 ]
 		then
 			posX=$((MinX-glb))
 			eval $(xdotool getwindowgeometry --shell $ActiveWindow)
-			if [ $DEMITILE_WIN != $ActiveWindow -o $DEMITILE_XPOS != $CTB -o $Ypart != $DEMITILE_YPOS ]
+			if [ $DEMITILE_WIN != $ActiveWindow -o $DEMITILE_XPOS != $CTB -o $Ypart != $DEMITILE_YPOS -o $DEMITILE_MODE != 4 ]
 				then
 					sizeX=$MaxX
-					DEMITILE_MODE=2
+					DEMITILE_MODE=4
 
 #					if [ $Ypart -ne 1 ]
 #						then
@@ -255,20 +255,24 @@ if [ $Xpart -eq 0 ]
 #					fi
 
 				else
-					increment_DEMITILE_MODE		# function
-					case "$DEMITILE_MODE" in
-						1)
-							sizeX=$HalfX
-							posX=$((posX + (MidX/2)))
-							;;
-						2)
-							sizeX=$MaxX
-							;;
-						3)
-							posX=$((posX + (MidX/4)))
-							sizeX=$TriQtrX
-							;;
-					esac
+					sizeX=$HalfX
+					posX=$((posX + (MidX/2)))
+					DEMITILE_MODE=2
+
+#####					increment_DEMITILE_MODE		# function
+#####					case "$DEMITILE_MODE" in
+#####						1)
+#####							sizeX=$HalfX
+#####							posX=$((posX + (MidX/2)))
+#####							;;
+#####						2)
+#####							sizeX=$MaxX
+#####							;;
+#####						3)
+#####							posX=$((posX + (MidX/4)))
+#####							sizeX=$TriQtrX
+#####							;;
+#####					esac
 			fi
 			if [ $Ypart -ne 1 ]
 				then

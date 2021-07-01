@@ -56,7 +56,6 @@ following workarea fractions:
 
 #### Upper/Lower Half Tiles
 
-* Three-quarters (centered horizontally),
 * Half (centered horizontally), and
 * Full (i.e. maximum width)
 
