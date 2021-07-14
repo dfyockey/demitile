@@ -5,7 +5,9 @@ Point &amp; Press Tiling for Xfce
 
 Demitile enables active window tiling to different locations using a single
 tiling key. Tiling location is determined by mouse pointer position, and
-tile size is controlled by repeated tiling key presses.
+tile size is controlled by repeated tiling key presses. A detailed article
+on this tiling control technique, including a demonstration video,
+is available at http://dfyockey.github.io/demitile/article.html.
 
 ### Coarse Tiling
 
