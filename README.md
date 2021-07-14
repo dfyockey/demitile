@@ -1,5 +1,5 @@
 # demitile
-Point &amp; Press Tiling for Xfce
+Point &amp; Keypress Tiling for Xfce
 
 ## Description
 
