@@ -111,9 +111,13 @@ requires a spurious demitile window operation before it will toggle in width.
 	* In Xfce... If checked, uncheck
 	`Automatically tile windows when moving toward the screen edge`
 	on the Accessibility Tab in Window Manager Tweaks.
+	* In Mate... If checked, uncheck `Enable side by side tiling` on the
+	Placement tab in Window Preferences.
 
 5. (Optional) Disable shadows under windows.
 
 	* Recommended to provides sharper visual definition of tiled window edges.
 	* In Xfce... If checked, uncheck `Show shadows under regular windows`
 	on the Compositor Tab in Window Manager Tweaks.
+	* In Mate... Set Window Manager to `Marco + Compton` in the Windows section
+	of Desktop Settings.
