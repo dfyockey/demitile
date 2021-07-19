@@ -74,6 +74,15 @@ effective any time after the first key press until either
 * Fine Tiling does not apply to a center tiled window; attempts will
 have no effect.
 
+## Dependencies
+
+Demitile requires that the following utilities be installed:
+
+* wmctrl
+* xdotool
+* xprop
+* xwininfo
+
 ## Setup
 
 1. Place the `demitile` file in the directory of your choice.
