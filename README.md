@@ -1,5 +1,7 @@
 # demitile
-Point &amp; Keypress Tiling for Xfce
+Point &amp; Keypress Tiling for X11-based Desktop Environments
+
+* Tested in Xfce and Mate
 
 ## Description
 
@@ -89,26 +91,29 @@ Demitile requires that the following utilities be installed:
 
 2. Select a key or key combination to use as the tiling key.
 
-	* Suggestions for a tiling key include the Menu key or one of the
-Windows or Super keys. However, any available key or key combination
-can be used as the tiling key.
+	* Suggestions for a tiling key include the Menu key (for left-hand mousing),
+	Ctrl+` (for right-hand mousing), or, if possible,
+	one of the Windows or Super keys. However, any available key or key combination
+	can be used as the tiling key.
 
 3. Set a keyboard shortcut for the selected tiling key(s) to launch `demitile`.
 
 	* If the directory containing `demitile` isn't on your PATH, the
-keyboard shortcut will need the full path to `demitile`.
+	keyboard shortcut will need the full path to `demitile`.
 
-4. (Optional) If checked, uncheck
-`Automatically tile windows when moving toward the screen edge` on the
-Accessibility Tab in Window Manager Tweaks.
+4. (Optional) Disable tiling by moving toward the screen edge.
 
 	* Recommended to avoid confusion due to differences
 between drag-tiled and demitiled window behavior after tiling.
 If moved after tiling, drag-tiled windows return to their pre-tiled size
 while demitiled windows retain their tiled size. Also, a drag-tiled window
 requires a spurious demitile window operation before it will toggle in width.
+	* In Xfce... If checked, uncheck
+	`Automatically tile windows when moving toward the screen edge`
+	on the Accessibility Tab in Window Manager Tweaks.
 
-5. (Optional) If checked, uncheck `Show shadows under regular windows`
-on the Compositor Tab in Window Manager Tweaks.
+5. (Optional) Disable shadows under windows.
 
-	* Provides sharper visual definition of tiled window edges.
+	* Recommended to provides sharper visual definition of tiled window edges.
+	* In Xfce... If checked, uncheck `Show shadows under regular windows`
+	on the Compositor Tab in Window Manager Tweaks.
