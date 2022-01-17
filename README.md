@@ -85,7 +85,7 @@ Demitile requires that the following utilities be installed:
 * xprop
 * xwininfo
 
-On Debian-based systems (Ubuntu, Mint, Raspbian, etc.), `xprop` and xwininfo`
+On Debian-based systems (Ubuntu, Mint, Raspbian, etc.), `xprop` and `xwininfo`
 may by combined with other utilities in package `x11-utils`.
 
 ## Setup
