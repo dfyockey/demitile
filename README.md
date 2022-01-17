@@ -85,16 +85,21 @@ Demitile requires that the following utilities be installed:
 * xprop
 * xwininfo
 
+On Debian-based systems (Ubuntu, Mint, Raspbian, etc.), `xprop` and xwininfo`
+may by combined with other utilities in package `x11-utils`.
+
 ## Setup
 
 1. Place the `demitile` file in the directory of your choice.
 
 2. Select a key or key combination to use as the tiling key.
 
-	* Suggestions for a tiling key include the Menu key (for left-hand mousing),
-	Ctrl+` (for right-hand mousing), or, if possible,
-	one of the Windows or Super keys. However, any available key or key combination
-	can be used as the tiling key.
+	* Suggestions for a tiling key:
+        * the Menu key or Ctrl+Up (for left-hand mousing),
+        * Ctrl+` or Ctrl+Space (for right-hand mousing),
+        * one of the Windows or Super keys (if possible in your Desktop Environment).
+
+    However, any available key or key combination can be used as the tiling key.
 
 3. Set a keyboard shortcut for the selected tiling key(s) to launch `demitile`.
 
